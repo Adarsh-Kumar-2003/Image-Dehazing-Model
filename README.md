@@ -149,6 +149,12 @@ Reconstructed Clean Image
 - Dataset	1,000 images (RESIDE-6K)
 - Patch Size	16×16
 
+## RESULTS
+- Hazy image
+<img width="1282" height="974" alt="hazy" src="https://github.com/user-attachments/assets/5c7875f2-62d1-46a2-a8fa-da10d9eec1d3" />
+- Dehazed image
+<img width="1293" height="1001" alt="dehazed" src="https://github.com/user-attachments/assets/862bb6c1-6ed8-4a98-9961-c53fe8200062" />
+
 
 
 
