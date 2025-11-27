@@ -89,7 +89,67 @@ Evaluated using:
 - **PSNR (Peak Signal-to-Noise Ratio)**
 
 
-DC Net image dehazing model :- https://dl.acm.org/doi/abs/10.1007/s00138-021-01173-x
+## Hybrid Physics-Inspired ViT for Image Dehazing
+
+This project introduces a hybrid Vision Transformer (ViT) + physics-driven dehazing architecture that significantly outperforms classical CNN-based models like DCNet, AOD-Net, DehazeNet, and MSCNN.
+- The model fuses:
+- Physics-based priors (Value channel + multi-scale Dark Channel Prior)
+- Global attention from a pretrained ViT-Base
+- MAE-style decoder for high-quality reconstruction
+- A learnable 7→3 projection layer to inject physics priors into ViT
+
+## Architecure
+-  Full DCNet-style Physics Module
+- Extracted 7 haze-aware channels per image:
+- 1× Value (V) channel
+- 6× Multi-scale Dark Channel Priors (3×3 → 13×13)
+- Produces a 7-channel physics feature map.
+- Hybrid ViT-Based Dehazing Architecture
+- 7→3 Projection Layer
+- Learnable Conv2D
+- Converts 7 physics channels → 3 pseudo-RGB
+- Makes the model HuggingFace ViT compatible
+
+## Vision Transformer Encoder
+
+- ViT-Base Patch-16
+- 90% frozen
+- Only last 2 Transformer blocks trainable
+- Prevents overfitting on small datasets
+
+## MAE Decoder
+
+- Patch-level reconstruction
+- Learns global + local dehazing patterns
+
+
+## Architecture Diagram
+
+Hazy Image
+     ↓
+RGB → Resize → Tensor
+     ↓
+7-Channel Physics Feature Extraction (V + 6×DCP)
+     ↓
+Learnable 7→3 Conv Projection
+     ↓
+Vision Transformer Encoder (Frozen except last 2 layers)
+     ↓
+MAE Decoder
+     ↓
+Reconstructed Clean Image
+
+## Training Details
+- ViT Encoder	Frozen (except last 2 blocks)
+- Projection Layer (7→3)	Trainable
+- MAE Decoder	Trainable
+- Epochs	15–25
+- Loss	L1 Loss
+- Optimizer	Adam (lr = 2e-4)
+- Dataset	1,000 images (RESIDE-6K)
+- Patch Size	16×16
+
+
 
 
 
